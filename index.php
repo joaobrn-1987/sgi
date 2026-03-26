@@ -38,7 +38,9 @@ if (defined('ENVIRONMENT'))
 	
 		case 'testing':
 		case 'production':
-			error_reporting(0);
+			error_reporting(E_ALL); // TEMP DEBUG - revert to 0 after diagnosis
+			ini_set('display_errors', 0);
+			ini_set('log_errors', 1);
 		break;
 
 		default:
