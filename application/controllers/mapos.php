@@ -168,10 +168,11 @@ class Mapos extends CI_Controller {
         $agora = time();
         $limite = date('Y-m-d H:i:s', $agora - $janela);
 
-        $tentativas = $this->session->userdata('login_attempts') ?: [];
+        $raw_attempts = $this->session->userdata('login_attempts');
+        $tentativas = is_array($raw_attempts) ? $raw_attempts : [];
         // Filtrar tentativas dentro da janela
         $tentativas = array_filter($tentativas, function($t) use ($agora, $janela) {
-            return ($agora - $t) < $janela;
+            return is_numeric($t) && ($agora - $t) < $janela;
         });
 
         if (count($tentativas) >= $max_tentativas) {

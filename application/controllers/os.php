@@ -1874,6 +1874,11 @@ public function visualizar()
 
     // Orçamento
     $this->data['orcamento'] = $this->orcamentos_model->getById('orcamento', $this->data['result']->idOrcamentos);
+    if ($this->data['orcamento'] === null) {
+        $this->session->set_flashdata('error', 'Orçamento não encontrado para esta OS.');
+        redirect('os');
+        return;
+    }
     $this->data['status_os'] = $this->os_model->getstatus_os();
     $this->data['escopo'] = $this->peritagem_model->getOrcEscopoItemByIdOs($idOs);
     $this->data['dados_natoperacao'] = $this->orcamentos_model->getNatOperacao($this->data['orcamento']->idNatOperacao);
@@ -2046,6 +2051,11 @@ public function visualizar()
         $this->data['anexo_nfcliente'] = $this->os_model->getnf_os($this->uri->segment(3), 'anexo_nfcliente');
         $this->data['anexo_nfvenda'] = $this->os_model->getnf_os($this->uri->segment(3), 'anexo_nfvenda');
         $this->data['orcamento'] = $this->orcamentos_model->getById('orcamento', $this->data['result']->idOrcamentos);
+        if ($this->data['orcamento'] === null) {
+            $this->session->set_flashdata('error', 'Orçamento não encontrado para esta OS.');
+            redirect('os');
+            return;
+        }
         $this->data['status_os'] = $this->os_model->getstatus_os();
         $this->data['dados_natoperacao'] = $this->orcamentos_model->getNatOperacao($this->data['orcamento']->idNatOperacao);
         $this->data['unid_exec'] = $this->os_model->get_table('unidade_execucao');
