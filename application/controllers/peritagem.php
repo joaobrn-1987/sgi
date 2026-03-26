@@ -175,9 +175,9 @@ class Peritagem extends CI_Controller
         if(!empty($escopoOrc)){
             $escopoOrcItens = $this->peritagem_model->getEscopoItensOrcByidEscopoAndIdOrcItem($escopoOrc->idOrcServicoEscopo);
             $verifyItem = false;
-            foreach($escopoItens as $r){
+            foreach(($escopoItens ?? []) as $r){
                 $verifyItem = false;
-                foreach($escopoOrcItens as $b){
+                foreach(($escopoOrcItens ?? []) as $b){
                     if($b->idServicoEscopoItens == $r->idServicoEscopoItens){
                         $verifyItem = true;
                     }
@@ -442,8 +442,8 @@ class Peritagem extends CI_Controller
     }
 
     function additenschecklist(){
-        $catalogoitens = $this->input->post("idCatalogoItensNovosItens");
-        $orcServicoEscopo = $this->input->post("idOrcEscopoNovosItens");
+        $catalogoitens = $this->input->post("idCatalogoItensNovosItens") ?? [];
+        $orcServicoEscopo = $this->input->post("idOrcEscopoNovosItens") ?? [];
         /*
         echo json_encode($catalogoitens);
         echo "<br>";
@@ -453,14 +453,14 @@ class Peritagem extends CI_Controller
         $tiposServicos = $this->orcamentos_model->getAllTiposServico();
         for($r= 0; $r<count($catalogoitens);$r++){
             if(!empty($catalogoitens)){
-                $pn = $this->input->post("novoEscopoPN_".$catalogoitens[$r]);
+                $pn = $this->input->post("novoEscopoPN_".$catalogoitens[$r]) ?? [];
                 $idProduto = $this->input->post("novoEscopoIdProduto_".$catalogoitens[$r]);
                 $descricao = $this->input->post("novoEscopoDescProd_".$catalogoitens[$r]);
                 $classe = $this->input->post("selectClasse_".$catalogoitens[$r]);
                 $objOrcEscopo = $this->peritagem_model->getOrcEscopo($orcServicoEscopo[$r]);
-                $idServicoEscopo = $objOrcEscopo->idServicoEscopo;
-                
-                
+                $idServicoEscopo = $objOrcEscopo ? $objOrcEscopo->idServicoEscopo : null;
+
+
                 for($x = 0; $x < count($pn);$x++){
                     $idEscopoItens = null;
                     if(!empty($idProduto[$x])){
@@ -1085,7 +1085,7 @@ class Peritagem extends CI_Controller
         $this->load->view('tema/topo',$this->data);
     }
     function salvarCatalogo(){
-        $listaProd = $this->input->post("idProdutoC");
+        $listaProd = $this->input->post("idProdutoC") ?? [];
         $this->input->post("idProdutos");
         $this->load->model('produtos_model'); 
         $getProduto = $this->produtos_model->getById($this->input->post("idProdutos"));
@@ -1142,7 +1142,7 @@ class Peritagem extends CI_Controller
             );
             $this->peritagem_model->edit("catalogo_produto_itens",$data,"idCatalogoProdutoItens",$this->input->post('idCatalogoItens')[$x]);
         }
-        $listaProd = $this->input->post("idProdutoC");
+        $listaProd = $this->input->post("idProdutoC") ?? [];
         $idCatalogo =$this->input->post("idCatalogoProduto");
         for($x=0;$x<count($listaProd);$x++){
             $data2 = array(

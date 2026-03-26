@@ -2526,7 +2526,7 @@ if ($r == 'regiao'){
 				foreach($almoxarifado as $v){
 					$insumoCompativel = $this->pedidocompra_model->getUltimosOrcLimitedOne(" and distribuir_os.idInsumos = $v->idProduto");
 					if(!empty($insumoCompativel)){
-						$soma_almoxarifado = $soma_almoxarifado + ($insumoCompativel->valor_unitario * $v->quantidade);
+						$soma_almoxarifado = $soma_almoxarifado + ((float)$insumoCompativel->valor_unitario * (float)$v->quantidade);
 					}
 				}
 			}

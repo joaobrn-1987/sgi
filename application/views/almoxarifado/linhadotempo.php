@@ -97,7 +97,7 @@
                                             <?php 
                                             $total = 0;
                                                 foreach($result as $r){
-                                                    $total +=$r->mediaValorUnit*($r->quantidade_entrada-$r->quantidade_saida);
+                                                    $total += (float)$r->mediaValorUnit*((float)$r->quantidade_entrada-(float)$r->quantidade_saida);
                                                     echo '<tr>';
                                                         echo '<td>'.$r->pn.'</td>';
                                                         echo '<td>'.$r->descricaoInsumo.'</td>';

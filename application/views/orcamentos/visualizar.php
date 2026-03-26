@@ -247,11 +247,11 @@ $count_item = 1;
 
 foreach ($itens_orcamento as $item) {
     // Subtotal sem desconto
-    $subtotal_sem_desc = $item->qtd * $item->val_unit;
+    $subtotal_sem_desc = (float)$item->qtd * (float)$item->val_unit;
     // Subtotal com desconto
-    $subtotal = $subtotal_sem_desc - $item->desconto;
+    $subtotal = $subtotal_sem_desc - (float)$item->desconto;
     // Valor do IPI sobre subtotal com desconto
-    $valoripi_item = $subtotal * ($item->val_ipi / 100);
+    $valoripi_item = $subtotal * ((float)$item->val_ipi / 100);
     // Total do item
     $valor_total_item = $subtotal + $valoripi_item + $item->frete;
 

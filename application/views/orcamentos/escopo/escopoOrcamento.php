@@ -124,15 +124,15 @@
                                 <div class="span12" style="padding: 1%; margin-left: 0">
                                     <div class="span4" class="control-group">
                                         <label for="idGrupoServico" class="control-label">Total Serviço: </label>
-                                        <input type="text" class=" span12" id="totalServico" value="<?php if(isset($orcServicoEscopoItens)){$valorServ = 0;foreach($orcServicoEscopoItens as $r){if($r->descricaoClasse == "Serviço"){$valorServ += $r->valorUnitario*$r->quantidade;}} echo "R$ ".number_format($valorServ, 3, ",", ".");}?>" readonly />
+                                        <input type="text" class=" span12" id="totalServico" value="<?php if(isset($orcServicoEscopoItens)){$valorServ = 0;foreach($orcServicoEscopoItens as $r){if($r->descricaoClasse == "Serviço"){$valorServ += (float)$r->valorUnitario*(float)$r->quantidade;}} echo "R$ ".number_format($valorServ, 3, ",", ".");}?>" readonly />
                                     </div>
                                     <div class="span4" class="control-group">
                                         <label for="idGrupoServico" class="control-label">Total Peças: </label>
-                                        <input type="text"  class=" span12"id="totalPecas" value="<?php if(isset($orcServicoEscopoItens)){$valorPec = 0;foreach($orcServicoEscopoItens as $r){if($r->descricaoClasse == "Peça"){$valorPec += $r->valorUnitario*$r->quantidade;}} echo "R$ ".number_format($valorPec, 3, ",", ".");}?>" readonly />
+                                        <input type="text"  class=" span12"id="totalPecas" value="<?php if(isset($orcServicoEscopoItens)){$valorPec = 0;foreach($orcServicoEscopoItens as $r){if($r->descricaoClasse == "Peça"){$valorPec += (float)$r->valorUnitario*(float)$r->quantidade;}} echo "R$ ".number_format($valorPec, 3, ",", ".");}?>" readonly />
                                     </div>
                                     <div class="span4" class="control-group">
                                         <label for="idGrupoServico" class="control-label">Total da Reforma:</label>
-                                        <input type="text" class=" span12" id="totalReforma" value="<?php if(isset($orcServicoEscopoItens)){$valorTot = 0;foreach($orcServicoEscopoItens as $r){$valorTot += $r->valorUnitario*$r->quantidade;} echo "R$ ".number_format($valorTot, 3, ",", ".");}?>" readonly />
+                                        <input type="text" class=" span12" id="totalReforma" value="<?php if(isset($orcServicoEscopoItens)){$valorTot = 0;foreach($orcServicoEscopoItens as $r){$valorTot += (float)$r->valorUnitario*(float)$r->quantidade;} echo "R$ ".number_format($valorTot, 3, ",", ".");}?>" readonly />
                                     </div>
                                 </div>
                             </div>

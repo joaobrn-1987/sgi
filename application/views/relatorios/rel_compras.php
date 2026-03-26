@@ -187,7 +187,7 @@
     
     if(!empty($saidas_estoque)){
         foreach($saidas_estoque as $saida){
-            $total_geral_estoque += ($saida->quantidade * $saida->valorUnit);
+            $total_geral_estoque += ((float)$saida->quantidade * (float)$saida->valorUnit);
         }
     }
     ?>

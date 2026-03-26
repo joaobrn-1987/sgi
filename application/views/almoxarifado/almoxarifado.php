@@ -430,7 +430,7 @@ img {
                                                 id='nFTD_[]' type='hidden' /></td>
                                         <td>R$ <?php echo $r->valorUnit?><input value=<?php echo $r->valorUnit?>
                                                 name='valorUnit_[]' id='valorUnit_[]' type='hidden' /></td>
-                                        <td>R$ <?php echo str_replace(".",",",($r->valorUnit*$r->qtd))?></td>
+                                        <td>R$ <?php echo str_replace(".",",",((float)$r->valorUnit*(float)$r->qtd))?></td>
                                         <td><?php echo $r->idOs?><input value=<?php echo $r->idOs?> name='idOsTD_[]'
                                                 id='idOsTD_[]' type='hidden' /></td>
                                         <td> <button style="margin-right: 1%" data-toggle="modal"

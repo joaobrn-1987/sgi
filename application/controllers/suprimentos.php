@@ -2387,7 +2387,7 @@ public function salvaritemcompra(){
                              // Ajusta valor_total do item original em pedido_comprasitens
                              $dados_ = $this->pedidocompra_model->gettable('pedido_comprasitens','idCotacaoItens ='. $this->input->post('idCotacaoItens')[$x]);
                              if ($dados_) {
-                                 $valor_total_calc = $dados_->valor_unitario * $this->input->post('qtdrecebida')[$x];
+                                 $valor_total_calc = (float)$dados_->valor_unitario * (float)$this->input->post('qtdrecebida')[$x];
                                  if($dados_->ipi_valor != 0.00) {
                                      $calc = ($dados_->ipi_valor / 100) * $valor_total_calc;
                                      $valor_total_calc = $valor_total_calc + $calc;
@@ -6498,7 +6498,7 @@ public function gerarNovoPedidoCompra(){
 			
                     $this->data['dados_'] = $this->pedidocompra_model->gettable('pedido_comprasitens','idCotacaoItens ='. $this->input->post('idCotacaoItens')[$x]);
                     
-                    $valor_total_calc = $this->data['dados_']->valor_unitario * $this->input->post('qtdrecebida')[$x];
+                    $valor_total_calc = (float)$this->data['dados_']->valor_unitario * (float)$this->input->post('qtdrecebida')[$x];
                     if($this->data['dados_']->ipi_valor <> 0.00)
                     {
                         $calc = ($this->data['dados_']->ipi_valor) / 100 * $valor_total_calc;
@@ -8757,7 +8757,7 @@ public function gerarNovoPedidoCompra(){
         $soma = 0;/*
         $enviarEmail = true;
         foreach($itensPedido as $v){
-            $soma += $v->valor_unitario*$v->quantidade;
+            $soma += (float)$v->valor_unitario * (float)$v->quantidade;
             if($v->etapa<3 || $v->idStatuscompras ==10){
                 $enviarEmail = false;
             }

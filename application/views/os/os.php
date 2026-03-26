@@ -335,7 +335,7 @@ if (!$results) {
                                                 <select class="span12" name="selectStatusPeritagem">
                                                     <option value=""></option>
                                                     <?php 
-                                                        foreach($status_escopo as $r){
+                                                        foreach(($status_escopo ?? []) as $r){
                                                             echo "<option value='".$r->idStatusEscopo."'>".$r->descricaoEscopo."</option>";
                                                         }
                                                     ?>

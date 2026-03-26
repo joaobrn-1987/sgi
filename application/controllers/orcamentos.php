@@ -1986,7 +1986,7 @@ public function carregarVendedoresAuxiliares() {
                                 "idProduto_sub" => $v->idProduto,
                                 "posicao" => count($subOs),
                                 "data_insert" => date('Y-m-d H:i:s'),
-                                "quantidade" => $v->quantidade * $valor_item->qtd,
+                                "quantidade" => (float)$v->quantidade * (float)$valor_item->qtd,
                                 "idClasse" => 2,
                                 "ativo" => 1,
                                 "descricaoOsSub" => $v->descricao
@@ -2042,7 +2042,7 @@ public function carregarVendedoresAuxiliares() {
                                     "idProduto_sub" => $v->idProduto,
                                     "posicao" => count($subOs),
                                     "data_insert" => date('Y-m-d H:i:s'),
-                                    "quantidade" => $v->quantidade * $valor_item->qtd,
+                                    "quantidade" => (float)$v->quantidade * (float)$valor_item->qtd,
                                     "idClasse" => 2,
                                     "ativo" => 1,
                                     "descricaoOsSub" => $v->descricao
