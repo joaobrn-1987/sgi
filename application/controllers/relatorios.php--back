@@ -1,0 +1,377 @@
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+
+/**
+ * @property Almoxarifado_model $almoxarifado_model
+ * @property Arquivos_model $arquivos_model
+ * @property Clientes_model $clientes_model
+ * @property Conecte_model $conecte_model
+ * @property Cotacao_model $cotacao_model
+ * @property Desenho_model $desenho_model
+ * @property Estoque_model $estoque_model
+ * @property Financeiro_model $financeiro_model
+ * @property Fornecedores_model $fornecedores_model
+ * @property Insumos_model $insumos_model
+ * @property Mapos_model $mapos_model
+ * @property Maquinas_model $maquinas_model
+ * @property Maquinasusuarios_model $maquinasusuarios_model
+ * @property Orcamentos_model $orcamentos_model
+ * @property Os_model $os_model
+ * @property Pedidocompra_model $pedidocompra_model
+ * @property Pedidocompraalmox_model $pedidocompraalmox_model
+ * @property Peritagem_model $peritagem_model
+ * @property Permissoes_model $permissoes_model
+ * @property Processos_model $processos_model
+ * @property Producao_model $producao_model
+ * @property Produtos_model $produtos_model
+ * @property Registrodescarte_model $registrodescarte_model
+ * @property Relatorios_model $relatorios_model
+ * @property Usuarios_model $usuarios_model
+ */
+
+class Relatorios extends CI_Controller{
+    public function __construct() {
+        parent::__construct();
+        if((!$this->session->userdata('session_id')) || (!$this->session->userdata('logado'))){
+            redirect('mapos/login');
+        }
+        
+        $this->load->model('Relatorios_model','',TRUE);
+        $this->data['menuRelatorios'] = 'Relatórios';
+
+    }
+ public function imprimir_pedido(){
+		 if(!$this->permission->checkPermission($this->session->userdata('permissao'),'vPedCompra')){
+           $this->session->set_flashdata('error','Você não tem permissão para visualizar Pedido.');
+           redirect(base_url());
+        }
+		
+
+        $this->data['custom_error'] = '';
+        $this->load->model('relatorios_model');
+		
+		
+		
+         $data['result'] = $this->relatorios_model->pedidoCustom($this->uri->segment(3));
+       
+
+	
+				$this->load->helper('mpdf');
+           echo $html = $this->load->view('relatorios/imprimir/imprimir_pedido',$data,true);
+       
+    }
+    public function clientes(){
+
+        if(!$this->permission->checkPermission($this->session->userdata('permissao'),'rCliente')){
+           $this->session->set_flashdata('error','Você não tem permissão para gerar relatórios de clientes.');
+           redirect(base_url());
+        }
+        $this->data['view'] = 'relatorios/rel_clientes';
+       	$this->load->view('tema/topo',$this->data);
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+////////////////////////////////alterações status orçamento e idstatusOs///////////////////////////	
+	
+    function rel_orcamento()
+    {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'rOrcamento')) {
+            $this->session->set_flashdata('error', 'Você não tem permissão para ver relatorio de orçamento.');
+            redirect(base_url());
+        }
+        $this->load->library('table');
+        $this->load->library('pagination');
+        $this->load->model('orcamentos_model');
+        $this->load->model('almoxarifado_model');
+        $this->load->model('os_model');
+        $this->load->model('relatorios_model');
+
+        $idUser = $this->session->userdata('idUsuarios');
+        $getUserEmpresa = $this->almoxarifado_model->getEmpresaUsuario($idUser);
+
+        $this->data['dados_emitente'] = $this->orcamentos_model->getEmitente();
+        $this->data['dados_motivo'] = $this->orcamentos_model->getmotivo();
+        $this->data['dados_vendedor'] = $this->orcamentos_model->getVendedor();
+        $this->data['idVendedoresAux'] = $this->orcamentos_model->getVendedorAuxiliar();
+        $this->data['todas_regioes'] = $this->relatorios_model->getTodasRegioes();
+        $this->data['regiao'] = $this->relatorios_model->regiao();
+        $this->data['dados_statusorcamento'] = $this->orcamentos_model->getStatusOrcamento();
+        $this->data['dados_statusos'] = $this->orcamentos_model->getStatusOs();
+        $this->data['dados_gruposervico'] = $this->orcamentos_model->getGrupoServico();
+        $this->data['dados_natoperacao'] = $this->orcamentos_model->getNatOperacao();
+
+        $petrolina = false;
+        $uberlandia = false;
+        if (count($getUserEmpresa) > 0) {
+            foreach ($getUserEmpresa as $r) {
+                if ($r->id == 1 || $r->id == 3) {
+                    $uberlandia = true;
+                }
+                if ($r->id == 2) {
+                    $petrolina = true;
+                }
+            }
+            if ($uberlandia == true && $petrolina == true) {
+                $this->data['dados_clientes'] = $this->orcamentos_model->getCliente('');
+            } else if ($uberlandia == true) {
+                $this->data['dados_clientes'] = $this->orcamentos_model->getCliente('');
+            } else if ($petrolina == true) {
+                $this->data['dados_clientes'] = $this->orcamentos_model->getCliente2();
+            }
+        } else {
+            $this->data['dados_clientes'] = $this->orcamentos_model->getCliente('');
+        }
+        $this->data['status_orcamento'] = $this->orcamentos_model->getCliente('');
+        $config['base_url'] = base_url() . 'index.php/relatorios/rel_orcamento/';
+        $cod_orc = $this->input->get('idOrcamentos');
+        $referencia = $this->input->get('referencia');
+        $num_pedido = $this->input->get('num_pedido');
+        $num_nf = $this->input->get('num_nf');
+        $regiao = $this->input->get('regiao');
+        $idstatusOs = $this->input->get('idstatusOs'); 
+        $clientes_id = $this->input->get('clientes_id');
+        $idstatusOrcamento = $this->input->get('idstatusOrcamento');
+        $idNatOperacao = $this->input->get('idNatOperacao');
+        $idGrupoServico = $this->input->get('idGrupoServico');
+
+        // INÍCIO DA ALTERAÇÃO FINAL NO CONTROLLER
+        if (is_array($idstatusOrcamento)) {
+            // Verifica se o gatilho para "Orçamento Pendente" (11) foi acionado
+            if (in_array('11', $idstatusOrcamento)) {
+                
+                // Adiciona o status 3 (Rejeitados/Cancelados) à busca
+                if (!in_array('3', $idstatusOrcamento)) {
+                    $idstatusOrcamento[] = '3';
+                }
+
+                // Adiciona o status 13 (Aprovado Parcial) à busca, para encontrar o orçamento 31009
+                if (!in_array('13', $idstatusOrcamento)) {
+                    $idstatusOrcamento[] = '13';
+                }
+            }
+        }
+        // FIM DA ALTERAÇÃO FINAL NO CONTROLLER
+
+        $querydatacadastro = "";
+        $dataInicialcad = $this->input->get('dataInicialcad');
+        $dataFinalcad = $this->input->get('dataFinalcad');
+
+        if (empty($dataInicialcad)) {
+            $date = new DateTime();
+            $interval = new DateInterval('P3M');
+            $dataInicialcad = $date->sub($interval)->format('d/m/Y');
+            $dataFinalcad = new DateTime();
+            $dataFinalcad = $dataFinalcad->format('d/m/Y');
+
+            $data_entrega['data_ini'] = $dataInicialcad;
+            $data_entrega['data_final'] = $dataFinalcad;
+            $this->data['data_entrega'] = $data_entrega;
+        } else {
+            $this->data['data_entrega'] = null;
+        }
+        if (!empty($dataInicialcad) && !empty($dataFinalcad)) {
+            $dataInicialcad2 = explode('/', $dataInicialcad);
+            $dataInicialcad2 = $dataInicialcad2[2] . '-' . $dataInicialcad2[1] . '-' . $dataInicialcad2[0];
+            $dataFinalcad2 = explode('/', $dataFinalcad);
+            $dataFinalcad2 = $dataFinalcad2[2] . '-' . $dataFinalcad2[1] . '-' . $dataFinalcad2[0];
+            $querydatacadastro = " and orcamento.data_abertura BETWEEN '$dataInicialcad2 00:00:00' AND '$dataFinalcad2 23:59:59'";
+        }
+        $status_orc = $this->input->get('status_orc');
+
+        $query_statusorc = "";
+        if (!empty($status_orc)) {
+            $conteudoo = $status_orc;
+            $query_statusorc = "(";
+            $primeiroco = true;
+            foreach ($conteudoo as $status3orc) {
+                if ($primeiroco) {
+                    $query_statusorc .= $status3orc;
+                    $primeiroco = false;
+                } else {
+                    $query_statusorc .= "," . $status3orc;
+                }
+            }
+            $query_statusorc .= ")";
+        }
+
+        $query_clientes = "";
+        $query_clientes3 = '';
+        if (!empty($clientes_id)) {
+            $conteudoc = $clientes_id;
+            $query_clientes = "(";
+            $primeiroc = true;
+            foreach ($conteudoc as $clientes3) {
+                if ($primeiroc) {
+                    $query_clientes .= $clientes3;
+                    $primeiroc = false;
+                } else {
+                    $query_clientes .= "," . $clientes3;
+                }
+            }
+            $query_clientes .= ")";
+        } else {
+            if ($uberlandia == true && $petrolina == true) {
+                $query_clientes3 = '';
+            } else if ($petrolina == true) {
+                $query_clientes3 = " and clientes.idClientes in(706,702,711,528,552,540,519,543,581,684,635,517,580,575,532,516,10,551)";
+            } else {
+                $query_clientes3 = '';
+            }
+        }
+
+        $query_idstatusOrcamento = "";
+        if (!empty($idstatusOrcamento) && is_array($idstatusOrcamento)) {
+            $conteudow1 = $idstatusOrcamento;
+            $query_idstatusOrcamento = "(";
+            $primeiro2w = true;
+            foreach ($conteudow1 as $statusorc3) {
+                if ($primeiro2w) {
+                    $query_idstatusOrcamento .= $statusorc3;
+                    $primeiro2w = false;
+                } else {
+                    $query_idstatusOrcamento .= "," . $statusorc3;
+                }
+            }
+            $query_idstatusOrcamento .= ")";
+        }
+        $vendedor = $this->input->get('idVendedores');
+        $query_vendedor = "";
+        $primeirovend = true;
+        if (!empty($vendedor)) {
+            $vendedor2 = "";
+            foreach ($vendedor as $des) {
+                if ($primeirovend) {
+                    $vendedor2 = $des;
+                    $primeirovend = false;
+                } else {
+                    $vendedor2 = $vendedor2 . ',' . $des;
+                }
+            }
+            $query_vendedor = "($vendedor2)";
+        }
+
+        $idstatusOs_filter = $this->input->get('idstatusOs');
+        $query_idstatusOs = "";
+        $primeirostatus = true;
+        if (!empty($idstatusOs_filter)) { 
+            $status2 = "";
+            foreach ($idstatusOs_filter as $so) {
+                if ($primeirostatus) {
+                    $status2 = $so;
+                    $primeirostatus = false;
+                } else {
+                    $status2 = $status2 . ',' . $so;
+                }
+            }
+            $query_idstatusOs = "($status2)";
+        }
+
+        $query_idGrupoServico = "";
+        if (!empty($idGrupoServico)) {
+            $conteudow = $idGrupoServico;
+            $query_idGrupoServico = "(";
+            $primeirow = true;
+            foreach ($conteudow as $grpo3) {
+                if ($primeirow) {
+                    $query_idGrupoServico .= $grpo3;
+                    $primeirow = false;
+                } else {
+                    $query_idGrupoServico .= "," . $grpo3;
+                }
+            }
+            $query_idGrupoServico .= ")";
+        }
+
+        $query_idNatOperacao = "";
+        if (!empty($idNatOperacao)) {
+            $conteudod = $idNatOperacao;
+            $query_idNatOperacao = "(";
+            $primeirod = true;
+            foreach ($conteudod as $natoperacao3) {
+                if ($primeirod) {
+                    $query_idNatOperacao .= $natoperacao3;
+                    $primeirod = false;
+                } else {
+                    $query_idNatOperacao .= "," . $natoperacao3;
+                }
+            }
+            $query_idNatOperacao .= ")";
+        }
+
+        $idProdutos = $this->input->get('idProdutos');
+
+        $vendedor = $this->input->get('idVendedores');
+        $query_vendedor = "";
+        $primeirovend = true;
+        if (!empty($vendedor)) {
+            $vendedor2 = "";
+            foreach ($vendedor as $des) {
+                if ($primeirovend) {
+                    $vendedor2 = $des;
+                    $primeirovend = false;
+                } else {
+                    $vendedor2 = $vendedor2 . ',' . $des;
+                }
+            }
+            $query_vendedor = "($vendedor2)";
+        }
+
+        $idVendedorAuxiliar = $this->input->get('idVendedoresAux');
+        $query_vendedorAuxiliar = "";
+        $primeirovendaux = true;
+        if (!empty($idVendedorAuxiliar)) {
+            $vendedoraux2 = "";
+            foreach ($idVendedorAuxiliar as $vaux) {
+                if ($primeirovendaux) {
+                    $vendedoraux2 = $vaux;
+                    $primeirovendaux = false;
+                } else {
+                    $vendedoraux2 = $vendedoraux2 . ',' . $vaux;
+                }
+            }
+            $query_vendedorAuxiliar = "($vendedoraux2)";
+        }
+
+        if (!empty($regiao) || !empty($idVendedorAuxiliar) || !empty($cod_orc) || !empty($referencia) ||  !empty($num_pedido) || !empty($num_nf)  || !empty($querydatacadastro) || !empty($query_statusorc) || !empty($num_pedido) || !empty($num_nf)  || !empty($query_clientes) || !empty($query_clientes) || !empty($query_idGrupoServico) || !empty($query_idNatOperacao) || !empty($query_idstatusOrcamento) || !empty ($query_idstatusOs) ||!empty($idProdutos) || !empty($query_clientes3) || !empty($query_vendedor) || !empty($query_vendedorAuxiliar)) {
+            $this->data['results'] = $this->relatorios_model->getWhereLikeos2orc(
+                $regiao,
+                $idVendedorAuxiliar,
+                $cod_orc,
+                $referencia,
+                $num_pedido,
+                $num_nf,
+                $querydatacadastro,
+                $query_statusorc,
+                $query_clientes,
+                $query_idGrupoServico,
+                $query_idNatOperacao,
+                $query_idstatusOrcamento,
+                $query_idstatusOs,
+                $idProdutos,
+                $query_clientes3,
+                $query_vendedor,
+                $query_vendedorAuxiliar
+            );
+        } else {
+            $this->data['results'] = $this->relatorios_model->getAllOrcamentos();
+        }
+        $this->data['todas_regioes'] = $this->relatorios_model->getTodasRegioes();
+        $this->data['regiao'] = $this->relatorios_model->regiao();
+        $this->data['vendedores'] = $this->Relatorios_model->vendedoresRapid();
+        $this->data['idVendedores'] = $this->Relatorios_model->vendedoresAuxRapid();
+        $this->data['view'] = 'relatorios/rel_orcamento';
+        $this->load->view('tema/topo', $this->data);
+    }
+
+    // ... restante do seu arquivo de controller ...
+    // ... ele permanece o mesmo, então não vou repeti-lo aqui para economizar espaço ...
+    // ... certifique-se de que o resto do seu arquivo original continue aqui ...
+}

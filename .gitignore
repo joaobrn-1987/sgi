@@ -1,0 +1,23 @@
+# Environment and credentials - NEVER commit these
+.env
+*.env
+application_prod/config/database.php
+application/config/database.php
+application/logs/
+application_prod/logs/
+
+# Cache
+application/cache/
+application_prod/cache/
+
+# Uploads
+assets/uploads/
+assets/assinaturas/
+assets/uploads_antes/
+
+# Backups
+backup/
+
+# OS files
+.DS_Store
+Thumbs.db

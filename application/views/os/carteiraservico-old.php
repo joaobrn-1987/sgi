@@ -1,0 +1,1202 @@
+<link rel="stylesheet" href="<?php echo base_url(); ?>js/jquery-ui/css/smoothness/jquery-ui-1.9.2.custom.css" />
+<script type="text/javascript" src="<?php echo base_url() ?>js/jquery-ui/js/jquery-ui-1.9.2.custom.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>js/jquery.maskedinput.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>js/fontawesome.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/tableimprimir.css" />
+
+
+<?php
+//print_r(DateTimeZone::listIdentifiers());
+//$data_atual = date('d/m/Y');
+
+// TRATANDO DATAS - Wesley Guimarães
+$data_inicial = $data_entrega["data_ini"];
+$data_atual   = $data_entrega["data_final"];
+
+
+$data_atual_sistem = date('d/m/Y H:i:s');
+if (!$results) {
+
+?>
+
+
+    <div class="widget-box">
+        <div class="widget-title">
+            <span class="icon">
+                <i class="icon-user"></i>
+            </span>
+            <h5>OS</h5>
+
+        </div>
+
+        <div class="widget-content nopadding">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+
+                        <th>OS.</th>
+                        <th>OR.</th>
+                        <th>Data OS.</th>
+                        <th>Descrição</th>
+                        <th>Cliente</th>
+                        <t>NF Cliente</th>
+                        <th>Qtd.</th>
+                        <th>Item - Descrição</th>
+                        <th>PN</th>
+                        <?php
+                        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+                        ?>
+                            <th>Valor</th>
+                        <?php
+                        }
+                        ?>
+                        <th>Data Ent.</th>
+                        <th>Reprogr.</th>
+						<!--<th>Data Exp.</th>-->
+                        <th>Status</th>
+                        <th>EXE</th>
+                        <th>FAT</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5">Nenhuma OS Cadastrado</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<?php } else {
+
+
+?>
+    <div class="row-fluid" style="margin-top:0">
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span class="icon">
+                        <i class="icon-tags"></i>
+                    </span>
+                    <h5>Filtro OS</h5>
+                </div>
+                <div class="widget-content nopadding">
+
+
+                    <div class="span12" id="divProdutosServicos" style=" margin-left: 0">
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+
+                                <div class="span12" id="divCadastrarOs">
+
+                                    <form class="form-inline" action="<?php echo base_url() ?>index.php/os/carteiraservico" method="get" name="form1" id="form1">
+
+                                        <div class="span12" style="padding: 1%; margin-left: 0">
+                                            <div class="span2" class="control-group">
+                                                <label for="idOs" class="control-label">Cod. OS.:</label>
+                                                <input class="span12 form-control" type="text" name="idOs" value="" autofocus class="span12">
+
+                                            </div>
+                                            <div class="span2" class="control-group">
+                                                <label for="idOrcamentos" class="control-label">Cod. Orc.:</label>
+                                                <input class="span12 form-control" type="text" name="idOrcamentos" value="" class="span12">
+
+                                            </div>
+                                            <!-- <div class="span1" class="control-group">
+                                            <label for="cliente" class="control-label">Cliente:</label>
+                                                        <input class="span12" class="span12 form-control" id="cliente"  type="text" name="cliente" value=""  />
+                                            <input id="clientes_id"  type="hidden" name="clientes_id" value=""  />
+                                        </div>-->
+
+
+
+                                            <div class="span3" class="control-group">
+
+                                                <label for="referencia" class="control-label"><b>PN</b>:</label>
+                                                <input type="hidden" id="idProdutos" name="idProdutos" size="3" value="" />
+                                                <input type="text" id="pn" class="span12" name="pn" size="97" ref="autocomplete" value="" />
+
+
+                                            </div>
+
+                                            <div class="span5" class="control-group">
+                                                <label for="descricao_item" class="control-label">Descrição</label>
+
+                                                <input id="descricao_item" class="span12" type="text" name="descricao_item" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="span12" style="padding: 1%; margin-left: 0">
+
+                                            <div class="span12">
+                                                <label for="cliente" class="control-label">Cliente:</label>
+                                                <p>
+                                                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#adm" aria-expanded="false" aria-controls="collapseExample">
+                                                        Mostrar/ocultar
+                                                    </button>
+                                                </p>
+                                                <div class="collapse" id="adm">
+                                                    <div class="card card-body">
+                                                        <table>
+                                                            <tr>
+                                                                <input type="checkbox" name="todasf" id="todasf" onClick="CheckAll22f();">&nbsp;<b>Marcar/Desmarcar todos</b>
+                                                                <br><br>
+                                                                <?php
+                                                                $i = 1;
+                                                                foreach ($dados_clientes as $cli) {
+
+                                                                ?>
+                                                                    <td>
+                                                                        <input type="checkbox" name="clientes_id[]" value="<?php echo $cli->idClientes; ?>"> <?php echo $cli->nomeCliente; ?>
+                                                                    </td>
+                                                                <?php
+                                                                    if ($i % 2) {
+                                                                        echo "</tr><tr>";
+                                                                    }
+                                                                    $i++;
+                                                                }
+                                                                ?>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+
+
+
+
+                                            </div>
+
+                                            <div>
+
+                                                <div class="span12" style="padding: 1%; margin-left: 0">
+
+
+
+
+                                                    <div class="span6" class="control-group">
+                                                        <label for="numpedido_os" class="control-label">Data cadastro:</label><br>
+
+                                                        De: <input id="dataInicialcad" class="data" type="text" name="dataInicialcad" value="<?php echo $data_inicial;?>" /> | Até:<input id="dataFinalcad" class="data" type="text" name="dataFinalcad" value="<?php echo $data_atual; ?>" />
+                                                    </div>
+
+                                                    <div class="span6" class="control-group">
+                                                        <label for="numpedido_os" class="control-label"><b>Data entrega e Data reagendada:</b></label><br>
+
+                                                        De: <input id="dataeinicial" class="data" type="text" name="dataeinicial" value="" /> | Até:<input id="dataefinal" class="data" type="text" name="dataefinal" value="" />
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="span12" style="padding: 1%; margin-left: 0">
+
+                                                    <div class="span6" class="control-group">
+                                                        <label for="numpedido_os" class="control-label">Data entrega:</label><br>
+
+                                                        De: <input type="date" name="dataInicialentrega" class="span5" /> | Até:<input type="date" name="dataFinalentrega" class="span5" />
+                                                    </div><br><br>
+                                                    <div class="span6" class="control-group">
+                                                        <label for="numpedido_os" class="control-label">Data reagendada:</label><br>
+
+                                                        De: <input type="date" name="dataInicialreag" class="span5" /> | Até:<input type="date" name="dataFinalreag" class="span5" />
+                                                    </div>
+
+
+												<div class="span12" style=" margin-left: 0; margin-top:10 ">
+													<div class="span4" class="control-group">
+														<label for="numpedido_os" class="control-label">Data Produção:</label><br>
+														De: <input id="dataInicialProducao" class="span5" type="date" name="dataInicialProducao" value="" /> | Até:<input id="dataFinalProducao" class="span5" type="date" name="dataFinalProducao" value="" />
+													</div>
+												</div>		
+
+
+                                                </div>
+
+
+                                                <div class="span12" style="padding: 1%; margin-left: 0">
+
+
+
+
+                                                    <div class="span412" class="control-group">
+
+
+                                                        <label for="idGrupoServico" class="control-label">Status OS:</label>&nbsp;<input type="checkbox" name="todas" id="todas" onClick="CheckAll2();"checked>&nbsp;Marcar/Desmarcar todos
+                                                        <br>
+<?php
+$statusIds = array(42,30,90,29,28, 25,40,78,92,86,20,9,213,16,5,85,87,96,100,101,205,215,216,219,225);
+?>
+
+<table width='100%'>
+    <tr>
+        <?php
+        $i = 0;
+        foreach ($status_os as $e) {
+        ?>
+            <td>
+                <input type="checkbox" name="idStatusOs[]" class='check' 
+                       value="<?php echo $e->idStatusOs; ?>" 
+                       <?php if (in_array($e->idStatusOs, $statusIds)) {
+                                 echo "checked";
+                             } ?>> 
+                &nbsp;<?php echo $e->nomeStatusOs; ?>
+            </td>
+        <?php
+            if (($i + 1) % 5 == 0)
+                echo "</tr><tr>";
+
+            $i++;
+        }
+        ?>
+    </tr>
+</table>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="span12" style="padding: 1%; margin-left: 0">
+                                                
+                                                    <div class="span4" class="control-group">
+                                                        <label for="idGrupoServico" class="control-label">Unid. Execuçao:</label>
+
+
+                                                        <?php foreach ($unid_exec as $exec) { ?>
+                                                            <input type="checkbox" name="unid_execucao[]" class='check' value="<?php echo $exec->id_unid_exec; ?>"> &nbsp;<?php echo $exec->status_execucao; ?>
+
+                                                        <?php } ?>
+
+
+                                                    </div>
+                                                    <div class="span4" class="control-group">
+                                                        <label for="idGrupoServico" class="control-label">Unid. Faturamento:</label>
+
+
+                                                        <?php foreach ($unid_fat as $fat) { ?>
+                                                            <input type="checkbox" name="unid_faturamento[]" class='check' value="<?php echo $fat->id_unid_fat; ?>"> &nbsp;<?php echo $fat->status_faturamento; ?>
+
+
+                                                        <?php } ?>
+
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="span2" class="control-group">
+                                                        <label for="idGrupoServico" class="control-label">Tipo:</label>
+                                                        <?php foreach ($tipo_os as $ostipo) { ?>
+                                                            <input type="checkbox" name="id_tipo[]" class='check' value="<?php echo $ostipo->id_tipo; ?>"> &nbsp;<?php echo $ostipo->nome_tipo; ?>
+
+
+                                                        <?php } ?>
+
+
+
+                                                    </div>
+                                                    <div class="span2" class="control-group">
+                                                        <label for="idGrupoServico" class="control-label">Desenho: </label>
+
+
+
+                                                        <input type="checkbox" name="desenho[]" class='check' value="3"> &nbsp;<i class="icon-ok" style="color:green"></i>
+                                                        <input type="checkbox" name="desenho[]" class='check' value="2"> &nbsp;<i class="fas fa-exclamation-triangle" style="color:orange"></i>
+                                                        <input type="checkbox" name="desenho[]" class='check' value="1"> &nbsp;<i class="icon-ban-circle" style="color:grey"></i>
+
+
+
+
+
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="span12" style="padding: 1%; margin-left:0">
+                                                <label for="idGrupoServico" class="control-label">Vendedor: </label>
+                                                <?php 
+                                                foreach ($vendedores as $for) {
+
+                                                    ?>
+                                                    <td>
+                                                    
+
+
+                                                        <input type="checkbox" name="idVendedores[]" <?php if(isset($idVendedores)){foreach($idVendedores as $r){if($r == $for->idVendedor){echo 'checked';}}} ?> value="<?php echo $for->idVendedor; ?>"> <?php echo $for->nomeVendedor; ?>
+                                                    </td>
+                                                    <?php
+                                                    if ($i == 1){
+                                                        echo "</tr><tr>";
+                                                        $i=0;
+                                                    }
+                                                    $i++;
+                                                }?>
+                                                </div>
+
+
+                                                <div class="span12" style="padding: 1%; margin-left: 0">
+                                                <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vVerificacaocontroleOS')) {?>
+                                            <div class="span2" class="control-group">
+                                                <label for="idGrupoServico" class="control-label">Verif. Cont.: </label>
+                                                </br>
+                                                <?php foreach($verificacao_controle as $r){?>
+                                                    <input type="checkbox" name="verificacaoControle[]" class='check' value="<?php echo $r->idVerificacaoControle;?>"> &nbsp;<?php echo $r->descricaoControle;?>
+                                                    </br>
+                                                    <?php 
+                                                }?>
+                                                
+                                            </div>
+                                            <div class="span2" class="control-group">
+                                                <label for="idGrupoServico" class="control-label">Status Peritagem: </label>
+                                                <select class="span12" name="selectStatusPeritagem">
+                                                    <option value=""></option>
+                                                    <?php 
+                                                        foreach($status_peritagem as $r){
+                                                            echo "<option value='".$r->idStatusPeritagem."'>".$r->descricaoPeritagem."</option>";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="span2">
+                                                    <label for="idGrupoServico" class="control-label">Grupo Serviço:</label>
+
+                                                    <select class="span12 " name="idGrupoServico">
+                                                        <option value=""></option>
+                                                        <?php foreach ($dados_gruposervico as $gs) { ?>
+                                                            <option value="<?php echo $gs->idGrupoServico; ?>"><?php echo $gs->nome; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            <?php }?>
+
+                                                    <div class="span12" class="control-group">
+                                                        <br>
+
+                                                        <input class="btn btn-default" type="submit" name="filter" value="Filtrar">
+                                                    </div>
+
+                                                </div>
+
+
+
+                                    </form>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    .
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="widget-box">
+        <div class="widget-title">
+            <span class="icon">
+                <i class="icon-user"></i>
+            </span>
+            <h5>OS</h5>
+
+        </div>
+        <div class="buttons">
+
+            <a id="imprimir" title="Imprimir" class="btn btn-mini btn-inverse" href=""><i class="icon-print icon-white"></i> Imprimir</a>
+            <a href=javascript:; class="export-csv btn btn-mini btn-inverse" data-filename="Rel-Carteira">Excel</a>
+        </div>
+        <div style="display: block ruby;">
+            <h5>Legenda:</h5>
+            <div>
+                Completo <a class="btn btn-small" style="border:0px"> <i class="icon-ok" style="color:green"></i></a>|
+                Incompleto <a class="btn btn-small" style="border:0px"> <i class="fas fa-exclamation-triangle" style="color:orange"></i></a>|
+                Sem desenho <a class="btn btn-small" style="border:0px"><i class="icon-ban-circle" style="color:grey"></i></a>
+            </div>
+        </div>
+        <div class="widget-content nopadding" id="printOs2">
+
+
+
+
+<table style="border-collapse: collapse;font-family:Arial, Helvetica, sans-serif;
+	font-size:11.5px; line-height:normal;" border="1" width='100%' id="fixed_table">
+
+    <tr>
+        <td colspan='30' align='center'> RELATÓRIO CARTEIRA DE SERVIÇO | <?php echo $data_atual_sistem; ?> </td>
+    </tr>
+
+    <tr>
+        <td align='center'><b>OS.</b></td>
+        <td align='center'><b>OR.</b></td>
+        <td align='center' class="no-print"><b>Grupo</b></td>
+        <td align='center'><b>Cliente</b></td>
+        <td align='center'><b>Solicitante</b></td>
+        <td align='center' class="no-print"><b>Vendedor</b></td>
+        <td align='center'><b>Data Criação OS</b></td>
+        <td align='center'><b>Data OS.</b></td>
+        <td align='center' class="no-print"><b>NF Cliente</b></td>
+        <td align='center'><b>Nº Pedido</b></td>
+        <td align='center'><b>Qtd.</b></td>
+        <td align='center'><b>Item - Descrição</b></td>
+        <td align='center'><b>PN</b></td>
+        <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) { ?>
+            <td align='center'><b>Valor</b></td>
+        <?php } ?>
+        <td align='center'><b>Data Ent.</b></td>
+        <td align='center'><b>Reprogr.</b></td>
+        <td align='center'><b>Status</b></td>
+        <td align='center'><b>Data Fat.</b></td>
+        <td align='center'><b>Data Fab.</b></td>
+        <td align='center'><b>Data Fim Prod.</b></td>
+        <td align='center'><b>DES</b></td>
+        <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vVerificacaocontroleOS')) { ?>
+            <td align='center'><b>Verif. Cont.</b></td>
+        <?php } ?>	
+        <td align='center'><b>EXE</b></td>
+        <td align='center'><b>FAT</b></td>
+        <td align='center'><b>Tipo</b></td>
+        <td align='center'><b>Data Expedição</b></td>
+        <td align='center'><b>Nº NF</b></td>
+        <td align='center'><b>Data NF Emitida</b></td>
+        <td align='center'><b>Usuário (Emitiu NF)</b></td>
+        <td align='center'><b>Qtde data Rep</b></td> 
+        <td align='center' class="no-print"><b>Ações</b></td> 
+    </tr>
+
+<?php
+$qtdStatusOS = 0;
+$qtdOSAtrasados = 0;
+$totalos = 0;
+$somatorio = 0;
+
+foreach ($results as $r) {
+
+
+    // Tratamento de Datas
+    $data_insert      = !empty($r->data_insert) ? date("d/m/Y", strtotime($r->data_insert)) : "";
+    $data_abertura    = !empty($r->data_abertura) ? date("d/m/Y", strtotime($r->data_abertura)) : "";
+    $data_entrega     = !empty($r->data_entrega) ? date("d/m/Y", strtotime($r->data_entrega)) : "";
+    $data_reagendada  = !empty($r->data_reagendada) ? date("d/m/Y", strtotime($r->data_reagendada)) : "";
+    $data_faturamento = !empty($r->data_nf_faturamento) ? date("d/m/Y", strtotime($r->data_nf_faturamento)) : "";
+    $data_fabricacao  = !empty($r->data_devolucao) ? date("d/m/Y", strtotime($r->data_devolucao)) : "";
+    $data_producao    = !empty($r->data_producao) ? date("d/m/Y", strtotime($r->data_producao)) : "";
+    $data_expedicao   = !empty($r->data_expedicao) ? date("d/m/Y", strtotime($r->data_expedicao)) : "";
+
+    $contagem = isset($r->qtde_reprog) ? (int)$r->qtde_reprog : 0;
+
+    if (strpos($r->nomeStatusOs, "(OS)")) {
+        $qtdStatusOS++;
+        if (!empty($r->data_entrega) && $r->data_entrega < date("Y-m-d")) {
+            $qtdOSAtrasados++;
+        }
+    }
+
+    echo "<tr>";
+    echo "<td align='center'>{$r->idOs}</td>";
+    echo "<td align='center'>{$r->idOrcamentos}</td>";
+    echo "<td align='center' class='no-print'>{$r->nomeServico}</td>";
+
+    $cliente = !empty($r->nomeClienteCart) ? $r->nomeClienteCart : $r->nomeCliente;
+    echo "<td>{$cliente}</td>";
+    echo "<td>{$r->clisol}</td>";
+    echo "<td class='no-print'>{$r->nomeVendedor}</td>";
+    echo "<td align='center'>{$data_insert}</td>";
+    echo "<td align='center'>{$data_abertura}</td>";
+    echo "<td align='center' class='no-print'>" . ($r->nf_cliente ? $r->nomeArquivo : "") . "</td>";
+    echo "<td align='center'>{$r->numpedido_os}</td>";
+    echo "<td align='right'>{$r->qtd_os} {$r->descricaoTipoQtd}</td>";
+
+    $descricao = substr($r->descricao_item, 0, 50);
+    if (strlen($r->descricao_item) > 50) $descricao .= " (...)";
+    echo "<td>{$descricao}</td>";
+    echo "<td align='center'>{$r->pn}</td>";
+
+    $result_val = 0; 
+    if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+        $calc = $r->qtd_os * $r->val_unit_os - $r->desconto_os;
+        $ipicalc = $r->val_ipi_os / 100 * $calc;
+        $result_val = $calc + $ipicalc;
+        echo "<td align='right'>" . number_format($result_val, 2, ',', '.') . "</td>";
+    }
+
+    echo "<td align='center'>{$data_entrega}</td>";
+    echo "<td align='center'>{$data_reagendada}</td>";
+    echo "<td>{$r->nomeStatusOs}</td>";
+    echo "<td align='center'>{$data_faturamento}</td>";
+    echo "<td align='center'>{$data_fabricacao}</td>";
+    echo "<td align='center'>{$data_producao}</td>";
+
+    $txtDes = ($r->statusDesenho == 3) ? "Finalizado" : (($r->statusDesenho == 1) ? "Aguardando Desenho" : "Aguardando Validação");
+    echo "<td align='center'>{$txtDes}</td>";
+
+    if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vVerificacaocontroleOS')) {
+        echo "<td align='center'>{$r->descricaoControle}</td>";
+    }
+    echo "<td align='center'>{$r->status_execucao}</td>";
+    echo "<td align='center'>{$r->status_faturamento}</td>";
+    echo "<td align='center'>{$r->nome_tipo}</td>";
+    echo "<td align='center'>{$data_expedicao}</td>";
+    echo "<td align='center'>{$r->numero_nf}</td>";
+    echo "<td align='center'>" . (!empty($r->data_nf_emitida) ? date('d/m/Y', strtotime($r->data_nf_emitida)) : "") . "</td>";
+    echo "<td align='center'>{$r->usuario_nf}</td>";
+
+    $estilo = ($contagem > 0) ? "style='color:red; font-weight:bold;'" : "";
+    echo "<td align='center' {$estilo}>{$contagem}</td>";
+
+    echo "<td align='center' class='no-print'>
+            <a href='".base_url("index.php/os/visualizar/{$r->idOs}")."' class='btn btn-mini tip-top' title='Visualizar OS'>
+                <i class='icon-eye-open'></i>
+            </a>
+          </td>";
+
+    echo "</tr>";   
+    $totalos++;
+    $somatorio += $result_val;
+}
+?>
+
+</table>
+
+
+
+
+            <?php
+            if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+            ?>
+                <div class="span6" style="margin-left: 0px;">
+                    <br>
+                    <table style="border-collapse: collapse;font-family:Arial, Helvetica, sans-serif;
+	                    font-size:10px;" border="1" width='100%'>
+                        <?php
+                        echo "<tr><td>Status</td><td>QTD</td><td>Valor</td></tr>";
+                        $mudast = 0;
+                        $escreve = '';
+                        $soma_qtos = 0;
+                        $somatoria_os = 0;
+                        $mudalin = 0;
+                        $i = 1;
+                        $conta = count($result_status);
+                        foreach ($result_status as $re_sta) {
+
+
+                            if ($mudast == 0) {
+                                if(!empty($re_sta->status_execucao)){
+                                    echo "<tr><td colspan='3'><b>";
+                                    echo $re_sta->status_execucao;
+                                    echo "</b></td></tr>";
+                                    $escreve = $re_sta->status_execucao;
+                                    $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                    $somatoria_os = $somatoria_os + $re_sta->soma;
+                                }else{
+                                    echo "<tr><td colspan='3'><b>";
+                                    echo "Unid. Exec. Não definido";
+                                    echo "</b></td></tr>";
+                                    $escreve = $re_sta->status_execucao;
+                                    $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                    $somatoria_os = $somatoria_os + $re_sta->soma;
+                                }
+                                
+                            } else {
+
+                                if ($escreve <> $re_sta->status_execucao) {
+                                    echo "<tr><b><td align='right'>";
+                                    echo "Total:</td><td>";
+                                    echo $soma_qtos;
+                                    echo "</td><td>";
+                                    echo "R$ " . number_format($somatoria_os, 2, ",", ".");
+                                    echo "</td></b></tr>";
+
+                                    $soma_qtos = '';
+                                    $somatoria_os = '';
+
+                                    if(!empty($re_sta->status_execucao)){
+                                        echo "<tr><td colspan='3'><b>";
+                                        echo $re_sta->status_execucao;
+                                        echo "</b></td></tr>";
+                                        $escreve = $re_sta->status_execucao;
+                                        $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                        $somatoria_os = $somatoria_os + $re_sta->soma;
+                                    }else{
+                                        echo "<tr><td colspan='3'><b>";
+                                        echo "Unid. Exec. Não definido";
+                                        echo "</b></td></tr>";
+                                        $escreve = $re_sta->status_execucao;
+                                        $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                        $somatoria_os = $somatoria_os + $re_sta->soma;
+                                    }
+                                    
+                                } else {
+                                    $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                    $somatoria_os = $somatoria_os + $re_sta->soma;
+                                }
+                            }
+                            echo "<tr><td>";
+                            echo $re_sta->nomeStatusOs;
+                            echo "</td><td>";
+                            echo $re_sta->qtdos;
+                            echo "</td><td>";
+                            echo "R$ " . number_format($re_sta->soma, 2, ",", ".");
+                            echo "</tr>";
+                            if ($i == $conta) {
+                                echo "<tr><td align='right'>";
+                                echo "Total:</td><td>";
+                                echo $soma_qtos;
+                                echo "</td><td>";
+                                echo "R$ " . number_format($somatoria_os, 2, ",", ".");
+                                echo "</td></tr>";
+                            }
+
+                            $i++;
+                            $mudast++;
+                        }
+                        ?>
+                    </table>
+                </div>
+                <?php }
+                 ?>
+                <div class="span6" >
+                    <br>
+                    <table style="border-collapse: collapse;font-family:Arial, Helvetica, sans-serif;
+	                    font-size:10px;" border="1" width='100%'>
+                        <?php
+                            echo '<tr>';
+                                echo '<td>';
+                                    echo '<b>O.S. em produção</b>';
+                                echo '</td>';
+                                echo '<td>';
+                                    echo $qtdStatusOS;
+                                echo '</td>';
+                            echo '</tr>';
+                            echo '<tr>';
+                                echo '<td>';
+                                    echo '<b>O.S. em atraso</b>';
+                                echo '</td>';
+                                echo '<td>';
+                                    echo $qtdOSAtrasados;
+                                echo '</td>';
+                            echo '</tr>';
+                            echo '<tr>';
+                                echo '<td>';
+                                    echo '<b>Índice de atraso</b>';
+                                echo '</td>';
+                                echo '<td>';
+                                    echo number_format((float)(($qtdOSAtrasados/$qtdStatusOS)*100), 2, ",", ".")."%";
+                                echo '</td>';
+                            echo '</tr>';
+                       
+                        
+                        ?>
+                    </table>
+                </div>
+            <div id="printOs3" style="display:none">
+<table style="border-collapse: collapse; font-family:Arial, Helvetica, sans-serif; font-size:11.5px; line-height:normal;" border="1" width='100%' id="fixed_table">
+
+    <tr>
+        <td colspan='29' align='center'>
+            RELATÓRIO CARTEIRA DE SERVIÇO | <?php echo $data_atual_sistem; ?>
+        </td>
+    </tr>
+    <tr>
+        <td align='center'><b>OS.</b></td>
+        <td align='center'><b>OR.</b></td>
+        <td align='center' class="no-print"><b>Grupo</b></td>
+        <td align='center'><b>Cliente</b></td>
+        <td align='center'><b>Solicitante</b></td>
+        <td align='center' class="no-print"><b>Vendedor</b></td>
+        <td align='center'><b>Data OS.</b></td>
+        <td align='center' class="no-print"><b>NF Cliente</b></td>
+        <td align='center'><b>Qtd.</b></td>
+        <td align='center'><b>Item - Descrição</b></td>
+        <td align='center'><b>PN</b></td>
+        <?php
+        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+        ?>
+            <td align='center'><b>Valor</b></td>
+        <?php
+        }
+        ?>
+        <td align='center'><b>Data Ent.</b></td>
+        <td align='center'><b>Reprogr.</b></td>
+        <td align='center'><b>Status</b></td>
+        <td align='center'><b>Data Fat.</b></td>
+        <td align='center'><b>Data Fab.</b></td>
+        <td align='center'><b>Data Fim Prod.</b></td>
+        <td align='center'><b>DES</b></td>
+        <?php
+        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vVerificacaocontroleOS')) {
+        ?>
+            <td align='center'><b>Verif. Cont.</b></td>
+        <?php
+        }
+        ?>
+        <td align='center'><b>EXE</b></td>
+        <td align='center'><b>FAT</b></td>
+        <td align='center' class="no-print"><b>Tipo</b></td>
+        <td align='center'><b></b></td>
+    </tr>
+
+
+    <?php
+    $totalos = 0;
+    $somatorio = 0;
+    $linha = 1;
+    $qtdStatusOS = 0;
+    $qtdOSAtrasados = 0;
+
+    foreach ($results as $r) {
+        $color = '';
+
+        if ($r->data_entrega <> '') {
+            $data_entrega = date("d/m/Y", strtotime($r->data_entrega));
+        } else {
+            $data_entrega = "";
+        }
+
+        if ($r->data_reagendada <> '') {
+            $data_reagendada = date("d/m/Y", strtotime($r->data_reagendada));
+        } else {
+            $data_reagendada = "";
+        }
+
+        /*if ($r->data_expedicao <> '') {
+            $data_expedicao = date("d/m/Y", strtotime($r->data_expedicao));
+        } else {
+            $data_expedicao = "";
+        }        */
+
+        if ($r->data_nf_faturamento <> '') {
+            $data_faturamento = date("d/m/Y", strtotime($r->data_nf_faturamento));
+        } else {
+            $data_faturamento = "";
+        }
+
+        if ($r->data_devolucao <> '') {
+            $data_fabricacao = date("d/m/Y", strtotime($r->data_devolucao));
+        } else {
+            $data_fabricacao = "";
+        }
+
+        if (strpos($r->nomeStatusOs, "(OS)")) {
+            $qtdStatusOS++;
+            if ($r->data_entrega < date("Y-m-d")) {
+                $qtdOSAtrasados++;
+            }
+        }
+
+        echo '<tr>';
+        echo '<td align="center" >' . $r->idOs . '</td>';
+        echo '<td align="center">' . $r->idOrcamentos . '</td>';
+        echo '<td align="center" class="no-print">' . $r->nomeServico . '</td>';
+        
+        if ($r->nomeClienteCart) {
+            $nomeCliente = $r->nomeClienteCart;
+        } else {
+            $nomeCliente = $r->nomeCliente;
+        }
+
+        if ($this->session->userdata('permissao') == 1) {
+            $rest1 = '';
+            $desc_banco1 = substr($nomeCliente, 0, 42);
+            $conta1 = strlen($nomeCliente);
+            if ($conta1 > 42) {
+                $rest1 = " (...)";
+            }
+        } else {
+            $rest1 = '';
+            $desc_banco1 = $nomeCliente;
+        }
+
+
+        echo '<td>' . $desc_banco1 . $rest1 . '</td>';
+        echo '<td>' . $r->clisol . '</td>';
+        echo '<td class="no-print">' . $r->nomeVendedor . '</td>';
+        //echo '<td align="center">' . (!empty($r->data_insert)?date("d/m/Y", strtotime($r->data_insert)):"") . '</td>';
+        echo '<td align="center">' . (!empty($r->data_abertura) ? date("d/m/Y", strtotime($r->data_abertura)) : "") . '</td>';
+
+        if ($r->nf_cliente == '' || $r->nf_cliente == null) {
+            echo '<td>' . $r->nf_cliente . '</td>';
+        } else {
+            echo '<td class="no-print">' . $r->nomeArquivo . '</td>';
+        }
+
+
+        /*echo '<td>' . $r->numpedido_os.'</td>'; */
+        echo '<td align="right">' . $r->qtd_os . ' ' . $r->descricaoTipoQtd . '</td>';
+
+
+        $rest = '';
+        $desc_banco = substr($r->descricao_item, 0, 50);
+        $conta = strlen($r->descricao_item);
+        if ($conta > 50) {
+            $rest = " (...)";
+        }
+
+        echo '<td>' . $desc_banco . $rest . '</td>';
+
+        echo '<td align="center">' . $r->pn . '</td>';
+
+        $calc = $r->qtd_os * $r->val_unit_os - $r->desconto_os;
+        $ipicalc = $r->val_ipi_os / 100 * $calc;
+        $result = $calc + $ipicalc;
+
+        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+            echo '<td align="right">' . number_format($result, 2, ",", ".") . '</td>';
+        }
+
+        echo '<td align="center">' . $data_entrega . '</td>';
+        echo '<td align="center">' . $data_reagendada . '</td>';
+        //echo '<td align="center">' . $data_expedicao . '</td>';
+
+        echo '<td>' . $r->nomeStatusOs . '</td>';
+        echo '<td align="center">' . $data_faturamento . '</td>';
+        echo '<td align="center">' . $data_fabricacao . '</td>';
+        echo '<td align="center">' . $data_producao_formatada . '</td>'; 
+
+        if ($r->statusDesenho == 3) {
+            echo '<td align="center">Finalizado</td>';
+        } else if ($r->statusDesenho == 1) {
+            echo '<td align="center">Aguardando Desenho</td>';
+        } else {
+            echo '<td align="center">Aguardando Validação</td>';
+        }
+
+        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vVerificacaocontroleOS')) {
+            echo '<td align="center">' . $r->descricaoControle . '</td>';
+        }
+
+        echo '<td align="center">' . $r->status_execucao . '</td>';
+        echo '<td align="center">' . $r->status_faturamento . '</td>';
+        echo '<td><font size="1" class="no-print">' . $r->nome_tipo . '</font></td>';
+        echo '<td><font size="1">';
+        
+        if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vOs')) {
+            echo '<a href="' . base_url() . 'index.php/os/visualizar/' . $r->idOs . '" style="margin-right: 1%" class="btn tip-top no-print"><i class="icon-eye-open no-print"></i></a>';
+        }
+        echo '</font></td>';
+
+        echo '</tr>';
+
+        $totalos++;
+        $somatorio = $somatorio + $result;
+    }
+    ?>
+
+    <tr class="no-csv">
+        <td colspan="30" style="text-align: center; font-size: 13px; font-weight: bold; background-color: #f0f0f0; padding: 8px;">
+            <?php 
+            if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+                echo "Total: R$ " . number_format($somatorio, 2, ',', '.') . " &nbsp;&nbsp;|&nbsp;&nbsp; ";
+            }
+            ?>
+            Total de OS: <?php echo $totalos; ?>
+        </td>
+    </tr>
+    </table>
+
+            <?php
+            if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
+            ?>
+                <div class="span6" style="margin-left: 0px;">
+                    <br>
+                    <table style="border-collapse: collapse;font-family:Arial, Helvetica, sans-serif;
+	                    font-size:10px;" border="1" width='100%'>
+                        <?php
+                        echo "<tr><td>Status</td><td>QTD</td><td>Valor</td></tr>";
+                        $mudast = 0;
+                        $escreve = '';
+                        $soma_qtos = 0;
+                        $somatoria_os = 0;
+                        $mudalin = 0;
+                        $i = 1;
+                        $conta = count($result_status);
+                        foreach ($result_status as $re_sta) {
+                            if ($mudast == 0) {
+                                if($re_sta->status_execucao){
+                                    echo "<tr><td colspan='3'><b>";
+                                    echo $re_sta->status_execucao;
+                                    echo "</b></td></tr>";
+                                    $escreve = $re_sta->status_execucao;
+                                    $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                    $somatoria_os = $somatoria_os + $re_sta->soma;
+                                }else{
+                                    echo "<tr><td colspan='3'><b>";
+                                    echo "Unid. Exec. Não definido";
+                                    echo "</b></td></tr>";
+                                    $escreve = $re_sta->status_execucao;
+                                    $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                    $somatoria_os = $somatoria_os + $re_sta->soma;
+                                }
+                                
+                            } else {
+
+                                if ($escreve <> $re_sta->status_execucao) {
+                                    echo "<tr><b><td align='right'>";
+                                    echo "Total:</td><td>";
+                                    echo $soma_qtos;
+                                    echo "</td><td>";
+                                    echo "R$ " . number_format($somatoria_os, 2, ",", ".");
+                                    echo "</td></b></tr>";
+
+                                    $soma_qtos = '';
+                                    $somatoria_os = '';
+
+                                    if($re_sta->status_execucao){
+                                        echo "<tr><td colspan='3'><b>";
+                                        echo $re_sta->status_execucao;
+                                        echo "</b></td></tr>";
+                                        $escreve = $re_sta->status_execucao;
+                                        $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                        $somatoria_os = $somatoria_os + $re_sta->soma;
+                                    }else{
+                                        echo "<tr><td colspan='3'><b>";
+                                        echo "Unid. Exec. Não definido";
+                                        echo "</b></td></tr>";
+                                        $escreve = $re_sta->status_execucao;
+                                        $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                        $somatoria_os = $somatoria_os + $re_sta->soma;
+                                    }
+                                    
+                                } else {
+                                    $soma_qtos = $soma_qtos + $re_sta->qtdos;
+                                    $somatoria_os = $somatoria_os + $re_sta->soma;
+                                }
+                            }
+                            echo "<tr><td>";
+                            echo $re_sta->nomeStatusOs;
+                            echo "</td><td>";
+                            echo $re_sta->qtdos;
+                            echo "</td><td>";
+                            echo "R$ " . number_format($re_sta->soma, 2, ",", ".");
+                            echo "</tr>";
+                            if ($i == $conta) {
+                                echo "<tr><td align='right'>";
+                                echo "Total:</td><td>";
+                                echo $soma_qtos;
+                                echo "</td><td>";
+                                echo "R$ " . number_format($somatoria_os, 2, ",", ".");
+                                echo "</td></tr>";
+                            }
+
+                            $i++;
+                            $mudast++;
+                        }
+                        ?>
+                    </table>
+                </div>
+                <div class="span6">
+                    <br>
+                    <table style="border-collapse: collapse;font-family:Arial, Helvetica, sans-serif;
+	                    font-size:10px;" border="1" width='100%'>
+                        <?php
+                            echo '<tr>';
+                                echo '<td>';
+                                    echo '<b>O.S. em produção</b>';
+                                echo '</td>';
+                                echo '<td>';
+                                    echo $qtdStatusOS;
+                                echo '</td>';
+                            echo '</tr>';
+                            echo '<tr>';
+                                echo '<td>';
+                                    echo '<b>O.S. em atraso</b>';
+                                echo '</td>';
+                                echo '<td>';
+                                    echo $qtdOSAtrasados;
+                                echo '</td>';
+                            echo '</tr>';
+                            echo '<tr>';
+                                echo '<td>';
+                                    echo '<b>Índice de atraso</b>';
+                                echo '</td>';
+                                echo '<td>';
+                                echo number_format((float)(($qtdOSAtrasados/$qtdStatusOS)*100), 2, ",", ".")."%";
+                                echo '</td>';
+                            echo '</tr>';
+                       
+                        
+                        ?>
+                    </table>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+
+
+
+        </div>
+
+
+
+    </div>
+<?php echo $this->pagination->create_links();
+} ?>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        jQuery(".data").mask("99/99/9999");
+    });
+
+    $(document).ready(function() {
+
+
+
+        $(document).on('click', 'a', function(event) {
+
+            var orc = $(this).attr('orc');
+            $('#idorc').val(orc);
+
+        });
+
+
+        $(document).on('click', 'a', function(event) {
+
+            var orc2 = $(this).attr('orc2');
+            $('#idorc2').val(orc2);
+
+        });
+
+    });
+    $(document).ready(function() {
+
+        $("#cliente").autocomplete({
+            source: "<?php echo base_url(); ?>index.php/orcamentos/autoCompleteCliente",
+            minLength: 1,
+            select: function(event, ui) {
+
+                $("#clientes_id").val(ui.item.id);
+
+                //getValor(ui.item.id);
+
+            }
+        });
+
+
+
+    });
+    console.log('#idProdutos');
+    $("#pn").autocomplete({
+        source: "<?php echo base_url(); ?>index.php/orcamentos/autoCompletePN",
+        minLength: 1,
+        select: function(event, ui) {
+            $('#idProdutos').val(ui.item.id);
+
+        }
+    });
+</script>
+
+
+
+<script>
+    // --- Selecionar todos status ---
+    var ok = true;
+    function CheckAll2() {
+        for (var i = 0; i < document.form1.elements.length; i++) {
+            var x = document.form1.elements[i];
+            if (x.name == 'idStatusOs[]') {
+                x.checked = !ok;
+            }
+        }
+        ok = !ok;
+    }
+
+    // --- Selecionar todos clientes ---
+    var okf = false;
+    function CheckAll22f() {
+        for (var i = 0; i < document.form1.elements.length; i++) {
+            var x = document.form1.elements[i];
+            if (x.name == 'clientes_id[]') {
+                x.checked = !okf;
+            }
+        }
+        okf = !okf;
+    }
+</script>
+
+<script type="text/javascript">
+$(function() {
+
+    // ======= EXPORTAR CSV (Excel) =======
+    $(".export-csv").on('click', function(event) {
+        event.preventDefault();
+
+        var filename = $(".export-csv").data("filename") + ".csv";
+        var $table = $('#fixed_table'); // ✅ tabela principal visível
+        exportTableToCSV($table, filename);
+    });
+
+    function exportTableToCSV($table, filename) {
+        var $rows = $table.find('tr').not(".no-csv");
+
+        var tmpColDelim = String.fromCharCode(11); // delimitador temporário de coluna
+        var tmpRowDelim = String.fromCharCode(0);  // delimitador temporário de linha
+        var colDelim = '";"';
+        var rowDelim = '"\r\n"';
+
+        var csv = '"' + $rows.map(function(i, row) {
+            var $row = $(row),
+                $cols = $row.find('td,th');
+            return $cols.map(function(j, col) {
+                var text = $(col).text().trim();
+                return text.replace(/"/g, '""'); // escapa aspas
+            }).get().join(tmpColDelim);
+        }).get().join(tmpRowDelim)
+        .split(tmpRowDelim).join(rowDelim)
+        .split(tmpColDelim).join(colDelim) + '"';
+
+        // --- BOM UTF-8 para abrir acentos corretamente no Excel ---
+        var BOM = "\uFEFF";
+        var blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
+
+        // --- Cria link e força download (compatível com Chrome, Edge e Firefox) ---
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // ======= IMPRESSÃO =======
+    $("#imprimir").click(function() {
+        PrintElem('#printOs2');
+    });
+
+    function PrintElem(elem) {
+        Popup($(elem).html());
+    }
+
+    function Popup(data) {
+        var mywindow = window.open('', 'SGI', 'height=600,width=800');
+        mywindow.document.write('<html><head><title>SGI</title><meta charset="UTF-8" />');
+        mywindow.document.write("<style>@media print { .no-print { display: none; } }</style>");
+        mywindow.document.write("<link rel='stylesheet' href='<?php echo base_url(); ?>assets/css/tableimprimir.css' />");
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+        mywindow.print();
+        return true;
+    }
+
+});
+</script>
