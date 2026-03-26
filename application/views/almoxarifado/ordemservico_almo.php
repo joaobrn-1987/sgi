@@ -459,8 +459,8 @@ if (!$results) {
                                             echo '<td><font size="1">' . $r->qtd_os . '</font></td>';
                                             echo '<td width="60%">' . $r->descricao_item . '</font></td>';
                                             echo '<td><font size="1">' . $r->numpedido_os . '</font><br><font size="1" color="red"> ' . $r->tag . '</font></td>';
-                                            $calc = $r->qtd_os * $r->val_unit_os - $r->desconto_os;
-                                            $ipicalc = $r->val_ipi_os / 100 * $calc;
+                                            $calc = (float)$r->qtd_os * (float)$r->val_unit_os - (float)$r->desconto_os;
+                                            $ipicalc = ((float)$r->val_ipi_os) / 100 * $calc;
                                             $result = $calc + $ipicalc;
                                             if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
 
@@ -627,8 +627,8 @@ if (!$results) {
                         echo '<td><font size="1">' . $r->qtd_os . '</font></td>';
                         echo '<td width="60%">' . $r->descricao_item . '</font></td>';
                         echo '<td><font size="1">' . $r->numpedido_os . '</font><br><font size="1" color="red"> ' . $r->tag . '</font></td>';
-                        $calc = $r->qtd_os * $r->val_unit_os - $r->desconto_os;
-                        $ipicalc = $r->val_ipi_os / 100 * $calc;
+                        $calc = (float)$r->qtd_os * (float)$r->val_unit_os - (float)$r->desconto_os;
+                        $ipicalc = ((float)$r->val_ipi_os) / 100 * $calc;
                         $result = $calc + $ipicalc;
                         if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vvalorOs')) {
 

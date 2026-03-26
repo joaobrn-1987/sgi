@@ -113,7 +113,7 @@
                                             <?php 
                                             $valorTotal = 0;
                                             foreach($result as $b){
-                                                $valorTotal += $b->val_unit*$b->qtd_os;
+                                                $valorTotal += (float)$b->val_unit*(float)$b->qtd_os;
                                                 echo '<tr>'.
                                                     '<td style="padding:0px; height:31px; line-height:normal">'.$b->idOs.'</td>'.
                                                     '<td style="padding:0px; height:31px; line-height:normal">'.$b->idOrcamentos.'</td>'.
