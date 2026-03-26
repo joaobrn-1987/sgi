@@ -143,13 +143,13 @@ class Os extends CI_Controller
 
         // --- Monta strings de condição WHERE a partir dos filtros ---
         $query_status_producao_sql = ""; $query_status_producao = "";
-        if (!empty($idStatusOs)) { $ids_escaped = []; foreach ($idStatusOs as $status) { $ids_escaped[] = $this->db->escape($status); } $query_status_producao = "(" . implode(',', $ids_escaped) . ")"; $query_status_producao_sql = " AND os.idStatusOs IN " . $query_status_producao; }
+        if (!empty($idStatusOs)) { $ids_int = []; foreach ($idStatusOs as $status) { $ids_int[] = (int)$status; } $ids_int = array_filter($ids_int); if (!empty($ids_int)) { $query_status_producao = "(" . implode(',', $ids_int) . ")"; $query_status_producao_sql = " AND os.idStatusOs IN " . $query_status_producao; } }
         $query_unid_execucao_sql = ""; $query_unid_execucao = "";
-        if (!empty($unid_execucao)) { $ids_escaped = []; foreach ($unid_execucao as $unid) { $ids_escaped[] = $this->db->escape($unid); } $query_unid_execucao = "(" . implode(',', $ids_escaped) . ")"; $query_unid_execucao_sql = " AND os.unid_execucao IN " . $query_unid_execucao; }
+        if (!empty($unid_execucao)) { $ids_int = []; foreach ($unid_execucao as $unid) { $ids_int[] = (int)$unid; } $ids_int = array_filter($ids_int); if (!empty($ids_int)) { $query_unid_execucao = "(" . implode(',', $ids_int) . ")"; $query_unid_execucao_sql = " AND os.unid_execucao IN " . $query_unid_execucao; } }
         $query_unid_faturamento_sql = ""; $query_unid_faturamento = "";
-        if (!empty($unid_faturamento)) { $ids_escaped = []; foreach ($unid_faturamento as $unid) { $ids_escaped[] = $this->db->escape($unid); } $query_unid_faturamento = "(" . implode(',', $ids_escaped) . ")"; $query_unid_faturamento_sql = " AND os.unid_faturamento IN " . $query_unid_faturamento; }
+        if (!empty($unid_faturamento)) { $ids_int = []; foreach ($unid_faturamento as $unid) { $ids_int[] = (int)$unid; } $ids_int = array_filter($ids_int); if (!empty($ids_int)) { $query_unid_faturamento = "(" . implode(',', $ids_int) . ")"; $query_unid_faturamento_sql = " AND os.unid_faturamento IN " . $query_unid_faturamento; } }
         $query_tipoos_sql = ""; $query_tipoos = "";
-        if (!empty($id_tipo)) { $ids_escaped = []; foreach ($id_tipo as $tipo) { $ids_escaped[] = $this->db->escape($tipo); } $query_tipoos = "(" . implode(',', $ids_escaped) . ")"; $query_tipoos_sql = " AND os.id_tipo IN " . $query_tipoos; }
+        if (!empty($id_tipo)) { $ids_int = []; foreach ($id_tipo as $tipo) { $ids_int[] = (int)$tipo; } $ids_int = array_filter($ids_int); if (!empty($ids_int)) { $query_tipoos = "(" . implode(',', $ids_int) . ")"; $query_tipoos_sql = " AND os.id_tipo IN " . $query_tipoos; } }
         $query_desenho_sql = ""; $query_desenho = "";
         if (!empty($desenho)) { $ids_escaped = []; foreach ($desenho as $des) { $ids_escaped[] = $this->db->escape($des); } $desenho2 = implode(',', $ids_escaped); $query_desenho = " and os.statusDesenho IN(".$desenho2.")"; $query_desenho_sql = $query_desenho; } // Mantendo a string SQL completa aqui
         $query_verifControl_sql = ""; $query_verifControl = "";

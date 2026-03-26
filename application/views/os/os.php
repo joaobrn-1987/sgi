@@ -567,7 +567,7 @@ if ($r->data_reagendada <> '') {
                                             */}
                                             echo '</font></td>';
                                             echo '</tr>';
-                                            $valor = $valor + (float)$result;
+                                            $valor = (float)$valor + (float)$result;
                                         }
                                         ?><!--
                                         <tr>
